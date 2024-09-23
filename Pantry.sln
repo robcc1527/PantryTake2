@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pantry", "Pantry\Pantry.csproj", "{E3908351-748F-4471-B9E0-1D54D9947088}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3908351-748F-4471-B9E0-1D54D9947088}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3908351-748F-4471-B9E0-1D54D9947088}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3908351-748F-4471-B9E0-1D54D9947088}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3908351-748F-4471-B9E0-1D54D9947088}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {92ECD0EF-F346-4AC5-96F1-88726F938DB8}
+	EndGlobalSection
+EndGlobal
