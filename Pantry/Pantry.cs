@@ -1,4 +1,6 @@
-﻿namespace Pantry
+﻿using Pantry.Models;
+
+namespace Pantry
 {
     public class Pantry
     {

@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pantry.Data;
+using Pantry.Models;
 using System.Security.AccessControl;
 
 
@@ -10,8 +12,15 @@ namespace Pantry.Controllers
     {
 
         private static readonly Pantry _pantry = new Pantry(); // static creates only one instance is created and is used for all
+        
+        private readonly PantryDBContext pantryDBContext;
 
         // create a full restful API - Delete/modify   
+
+        public PantryController(PantryDBContext pantryDBContext)
+        {
+            this.pantryDBContext = pantryDBContext;
+        }
 
 
         [HttpDelete]
@@ -58,18 +67,23 @@ namespace Pantry.Controllers
         [HttpGet(Name = "GetPantry")]
         public PantryItem[] Get()
         {
-            return _pantry.GetAll();
+            var result = pantryDBContext.PantryItems.ToArray();
+            return result;
         }
 
         [HttpGet("{Id}")]
         public ActionResult<PantryItem> GetByID(int Id)
         {
-            var pantryItemById = _pantry.GetById(Id);
-            if(pantryItemById == null)
+            //var pantryItemByID = pantryDBContext.PantryItems.Find(Id);
+
+            var pantryItemByID = pantryDBContext.PantryItems.Where(item => item.PantryItemID == Id).FirstOrDefault();
+
+            if (pantryItemByID == null)
             {
-                return BadRequest("Item not found");
+                return NotFound();
             }
-            return Ok(pantryItemById);
+
+            return pantryItemByID;
         }
     }
 }
