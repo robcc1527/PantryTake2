@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Pantry.Models;
 using System.Security.AccessControl;
+using Pantry.Data;
+
 
 
 namespace Pantry.Controllers
@@ -13,6 +16,12 @@ namespace Pantry.Controllers
 
         // create a full restful API - Delete/modify   
 
+        private readonly PantryDBContext pantryDBContext;
+
+        public PantryController(PantryDBContext pantryDBContext)
+        {
+            this.pantryDBContext = pantryDBContext;
+        }
 
         [HttpDelete]
         public ActionResult Delete(int Id)
@@ -58,7 +67,10 @@ namespace Pantry.Controllers
         [HttpGet(Name = "GetPantry")]
         public PantryItem[] Get()
         {
-            return _pantry.GetAll();
+            //return _pantry.GetAll();
+
+            var results = pantryDBContext.PantryItems.ToArray();
+            return results;
         }
 
         [HttpGet("{Id}")]
