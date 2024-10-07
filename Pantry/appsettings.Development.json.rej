@@ -1,0 +1,8 @@
+diff a/Pantry/appsettings.Development.json b/Pantry/appsettings.Development.json	(rejected hunks)
+@@ -6,5 +6,6 @@
+     }
+   },
+   "ConnectionStrings": {
++    "DefaultConnection": "Server=localhost;Port=60001;Database=Pantry;Uid=root;Pwd=Gr00veJ0nes;SslMode=none;AllowPublicKeyRetrieval=True;"
+   }
+ }

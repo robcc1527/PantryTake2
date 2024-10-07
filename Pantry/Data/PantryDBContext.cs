@@ -12,6 +12,7 @@ namespace Pantry.Data
         }
 
         public DbSet<PantryItem> PantryItems { get; set; }
+        public DbSet<Ingredient> Ingredients { get; set; }
 
     }
 }
