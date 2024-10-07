@@ -1,4 +1,4 @@
-﻿namespace Pantry
+﻿namespace Pantry.Models
 {
     public class PantryItem
     {
@@ -13,8 +13,8 @@
     {
         Fruit,
         Vegetables,
-        Grains, 
-        legumes, 
+        Grains,
+        legumes,
         nuts_Seeds,
         Meat_Poultry,
         Fish_Seafood,
