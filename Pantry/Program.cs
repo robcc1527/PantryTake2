@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Pantry.Data;
+using Pantry.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,22 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+try
+{
+   var context = services.GetRequiredService<PantryDBContext>();
+   context.Database.EnsureCreated();
+   await context.Database.MigrateAsync();
+   Console.WriteLine("Help");
+   await SeedPantryItems.SeedData(context);
+}
+catch (Exception ex)
+{
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occured during migration");
 }
 
 app.UseHttpsRedirection();

@@ -1,24 +1,15 @@
-﻿namespace Pantry.Models
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace Pantry.Models
 {
+    [PrimaryKey("PantryItemID")]
     public class PantryItem
     {
-        public int PantryItemID { get; set; }
-        public string ItemName { get; set; } = "";
-        public FoodType Type { get; set; }
+        public Guid PantryItemID { get; private set; } = Guid.NewGuid();
+        public Ingredient Ingredient { get; set; }
         public int Amount { get; set; }
 
     }
 
-    public enum FoodType : int
-    {
-        Fruit,
-        Vegetables,
-        Grains,
-        legumes,
-        nuts_Seeds,
-        Meat_Poultry,
-        Fish_Seafood,
-        Dairy_foods,
-        Eggs
-    }
+
 }

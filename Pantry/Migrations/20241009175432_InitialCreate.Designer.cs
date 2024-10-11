@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pantry.Data;
@@ -11,9 +12,11 @@ using Pantry.Data;
 namespace Pantry.Migrations
 {
     [DbContext(typeof(PantryDBContext))]
-    partial class PantryDBContextModelSnapshot : ModelSnapshot
+    [Migration("20241009175432_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,9 +50,6 @@ namespace Pantry.Migrations
                     b.Property<double>("Protein")
                         .HasColumnType("double precision");
 
-                    b.Property<Guid?>("RecipeID")
-                        .HasColumnType("uuid");
-
                     b.Property<double>("Sugar")
                         .HasColumnType("double precision");
 
@@ -60,8 +60,6 @@ namespace Pantry.Migrations
                         .HasColumnType("double precision");
 
                     b.HasKey("IngredientID");
-
-                    b.HasIndex("RecipeID");
 
                     b.ToTable("Ingredients");
                 });
@@ -85,51 +83,6 @@ namespace Pantry.Migrations
                     b.ToTable("PantryItems");
                 });
 
-            modelBuilder.Entity("Pantry.Models.Recipe", b =>
-                {
-                    b.Property<Guid>("RecipeID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("CookingInstructions")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("CookingTime")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("DietaryRestrictions")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("DifficultyLevel")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<double>("Quantities")
-                        .HasColumnType("double precision");
-
-                    b.Property<double>("ServingSize")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer");
-
-                    b.HasKey("RecipeID");
-
-                    b.ToTable("Recipes");
-                });
-
-            modelBuilder.Entity("Pantry.Models.Ingredient", b =>
-                {
-                    b.HasOne("Pantry.Models.Recipe", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeID");
-                });
-
             modelBuilder.Entity("Pantry.Models.PantryItem", b =>
                 {
                     b.HasOne("Pantry.Models.Ingredient", "Ingredient")
@@ -139,11 +92,6 @@ namespace Pantry.Migrations
                         .IsRequired();
 
                     b.Navigation("Ingredient");
-                });
-
-            modelBuilder.Entity("Pantry.Models.Recipe", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }

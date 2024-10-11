@@ -2,6 +2,7 @@
 using Pantry.Models;
 using System.Security.AccessControl;
 using Pantry.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -12,10 +13,6 @@ namespace Pantry.Controllers
     public class PantryController : ControllerBase
     {
 
-        private static readonly Pantry _pantry = new Pantry(); // static creates only one instance is created and is used for all
-
-        // create a full restful API - Delete/modify   
-
         private readonly PantryDBContext pantryDBContext;
 
         public PantryController(PantryDBContext pantryDBContext)
@@ -24,64 +21,80 @@ namespace Pantry.Controllers
         }
 
         [HttpDelete]
-        public ActionResult Delete(int Id)
+        public async Task<ActionResult> Delete(int Id)
         {
-            var pantryItemById = _pantry.GetById(Id);
+            var pantryItemById = await pantryDBContext.PantryItems.FindAsync(Id);
             if(pantryItemById == null)
             {
                 return BadRequest("Item not found");
             }
-            _pantry.DeleteById(Id);
+            pantryDBContext.PantryItems.Remove(pantryItemById);
+            await pantryDBContext.SaveChangesAsync();
             return Ok();
         }
 
-        [HttpPost("{Id}")]
-        public IActionResult Update(int Id, [FromBody]PantryItem pantryItem)
+        [HttpPut("{Id}")]
+        public async Task<IActionResult> Update(int Id, [FromBody]int amount)
         {
-            var updatePantryItem = _pantry.myPantry.FirstOrDefault(i => i.PantryItemID == Id);
+            var updatePantryItem = await pantryDBContext.PantryItems.FindAsync(Id);
             if (updatePantryItem == null)
             {
                 return BadRequest("Item not found");
             }
-            updatePantryItem.ItemName = pantryItem.ItemName;
-            updatePantryItem.Type = pantryItem.Type;
-            updatePantryItem.Amount = pantryItem.Amount;
-            
+            updatePantryItem.Amount = amount;
+            await pantryDBContext.SaveChangesAsync();
             return NoContent();            
         }
 
 
         [HttpPost(Name = "PostPantry")]
-        public IActionResult Post([FromBody] PantryItem pantryItem)
+        public async Task<IActionResult> Post([FromBody] PantryItemCreateDTO  newItem)
         {
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            int ProductID = _pantry.AddPantryItem(pantryItem);
-            pantryItem.PantryItemID = ProductID;
-            return Ok(pantryItem);
+            var ingredient = await pantryDBContext.Ingredients.FindAsync(newItem.IngredientID);
+            if(ingredient == null)
+            {
+                return BadRequest("Ingredient not found");
+            }
+            var newPantryItem = new PantryItem()
+            {
+                Amount = newItem.Amount,
+                Ingredient = ingredient
+            };
+            var changedItem = await pantryDBContext.PantryItems.AddAsync(newPantryItem);
+            var resultItem = changedItem.Entity;
+            await pantryDBContext.SaveChangesAsync();
+            return Ok(resultItem);
         }
 
        
         [HttpGet(Name = "GetPantry")]
         public PantryItem[] Get()
         {
-            //return _pantry.GetAll();
 
-            var results = pantryDBContext.PantryItems.ToArray();
+            var results = pantryDBContext.PantryItems.Include(p => p.Ingredient).ToArray();
             return results;
         }
 
         [HttpGet("{Id}")]
-        public ActionResult<PantryItem> GetByID(int Id)
+        public async Task<ActionResult<PantryItem>> GetByID(int Id)
         {
-            var pantryItemById = _pantry.GetById(Id);
-            if(pantryItemById == null)
+            var pantryItemById = await pantryDBContext.PantryItems.FindAsync(Id); //_pantry.GetById(Id);
+            if (pantryItemById == null)
             {
                 return BadRequest("Item not found");
             }
             return Ok(pantryItemById);
+        }
+
+
+        public class PantryItemCreateDTO
+        {
+            public Guid IngredientID { get; set; }
+            public int Amount { get; set; }
         }
     }
 }
