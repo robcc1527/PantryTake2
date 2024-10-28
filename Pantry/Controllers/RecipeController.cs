@@ -59,7 +59,7 @@ namespace Pantry.Controllers
                 return BadRequest("Item not Found");
             }
             updateRecipe.Name = recipe.Name;
-            updateRecipe.Ingredients = recipe.Ingredients;
+            //updateRecipe.Ingredients = recipe.Ingredients;
             updateRecipe.ServingSize = recipe.ServingSize;
             updateRecipe.DifficultyLevel = recipe.DifficultyLevel;
             updateRecipe.CookingTime = recipe.CookingTime;
@@ -73,6 +73,36 @@ namespace Pantry.Controllers
             return NoContent();
 
         }
+
+        [HttpPut("{Id}/addIngredients")]
+        public async Task<IActionResult> AddIngredient(Guid Id, [FromBody] List<Ingredient> ingredients)
+        {
+            var recipe = await pantryDBContext.Recipes.FindAsync(Id);
+            if (recipe == null)
+            {
+                return BadRequest("Item not Found");
+            }
+            recipe.Ingredients.AddRange(ingredients);
+            await pantryDBContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpPut("{Id}/removeIngredients")]
+        public async Task<IActionResult> RemoveIngredient(Guid Id, [FromBody] List<Ingredient> ingredients)
+        {
+            var recipe = await pantryDBContext.Recipes.FindAsync(Id);
+            if (recipe == null)
+            {
+                return BadRequest("Item not Found");
+            }
+            recipe.Ingredients.RemoveAll(ingredients.Contains);
+            await pantryDBContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
 
     }
 }
